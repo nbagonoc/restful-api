@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 // INIT App
 const app = express();
@@ -20,6 +21,8 @@ mongoose
   .catch(err => console.log(err));
 
 //   MIDDLEWARES
+// cors
+app.use(cors());
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
