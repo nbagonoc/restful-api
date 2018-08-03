@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 // INIT App
 const app = express();
 
-// CONFIG
+// DB CONFIG
 const db = require("./config/dbSecretKeys").mongoURI;
 
 // DB CONNECT
