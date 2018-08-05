@@ -13,6 +13,14 @@ router.get("/", (req, res) => {
     .catch(err => res.status(404).json({ success: false }));
 });
 
+// GET | api/items/:id
+// get a single item
+router.get("/:id", (req, res) => {
+  Item.findById(req.params.id)
+    .then(item => res.json(item))
+    .catch(err => res.status(404).json({ success: false }));
+});
+
 // POST | api/items
 // creates an item
 router.post("/", (req, res) => {
@@ -23,6 +31,19 @@ router.post("/", (req, res) => {
     .save()
     .then(item => res.json(item))
     .catch(err => res.status(404).json({ success: false }));
+});
+
+// PUT | api/items/:id
+// edit/update an item
+router.put("/:id", (req, res) => {
+  Item.findById(req.params.id).then(updateItem => {
+    updateItem.name = req.body.name;
+    // edit/update
+    updateItem
+      .save()
+      .then(() => res.json({ success: true }))
+      .catch(err => res.status(404).json({ success: false }));
+  });
 });
 
 // DELETE | api/items/:id
