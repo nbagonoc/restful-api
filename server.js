@@ -16,7 +16,7 @@ const db = require("./config/dbSecretKeys").mongoURI;
 mongoose
   .connect(
     db,
-    { useNewUrlParser: true }
+    {useNewUrlParser: true, useUnifiedTopology: true}
   )
   .then(() => {
     console.log("we are connected to the DB");
@@ -27,7 +27,7 @@ mongoose
 // cors
 app.use(cors());
 // body parser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // REQUIRE ROUTES
