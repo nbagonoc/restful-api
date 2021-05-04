@@ -3,7 +3,6 @@
 /////////////////////////////////////////
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 
 // INIT App
@@ -14,21 +13,16 @@ const db = require("./config/dbSecretKeys").mongoURI;
 
 // DB CONNECT
 mongoose
-  .connect(
-    db,
-    {useNewUrlParser: true, useUnifiedTopology: true}
-  )
-  .then(() => {
-    console.log("we are connected to the DB");
-  })
+  .connect(db,{useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => {console.log("we are connected to the DB");})
   .catch(err => console.log(err));
 
 //   MIDDLEWARES
 // cors
 app.use(cors());
 // body parser middleware
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
 // REQUIRE ROUTES
 const items = require("./routes/api/items");
