@@ -18,10 +18,10 @@ router.get("/", (req, res) => {
         res.json({ message: "no items found" });
       }
     })
-    .catch(ex => {
+    .catch(err => {
       return res
         .status(500)
-        .json({ success: false, message: "something went wrong" });
+        .json({ success: false, message: `something went wrong. ${err}` });
     });
 });
 
@@ -36,10 +36,10 @@ router.get("/:id", (req, res) => {
         res.status(404).json({ message: "item not found" });
       }
     })
-    .catch(ex => {
+    .catch(err => {
       return res
         .status(500)
-        .json({ success: false, message: "something went wrong" });
+        .json({ success: false, message: `something went wrong. ${err}` });
     });
 });
 
@@ -87,10 +87,10 @@ router.post("/", (req, res) => {
       .then(() =>
         res.json({ success: true, message: "successfully created item" })
       )
-      .catch(ex => {
+      .catch(err => {
         return res
           .status(500)
-          .json({ success: false, message: "something went wrong" });
+          .json({ success: false, message: `something went wrong. ${err}`});
       });
   }
 });
@@ -143,10 +143,10 @@ router.put("/:id", (req, res) => {
           res.status(404).json({ message: "item not found" });
         }
       })
-      .catch(ex => {
+      .catch(err => {
         return res
           .status(500)
-          .json({ success: false, message: "something went wrong" });
+          .json({ success: false, message: `something went wrong. ${err}` });
       });
   }
 });
@@ -166,10 +166,10 @@ router.delete("/:id", (req, res) => {
         res.status(404).json({ message: "item not found" });
       }
     })
-    .catch(ex => {
+    .catch(err => {
       return res
         .status(500)
-        .json({ success: false, message: "something went wrong" });
+        .json({ success: false, message: `something went wrong. ${err}` });
     });
 });
 
