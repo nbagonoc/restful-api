@@ -6,35 +6,15 @@ const isEmpty = require("../utils/isEmpty");
 const getAllItems = (req, res) => {
     Item.find()
         .sort({_id: -1})
-        .then(items => {
-            if (items) {
-                res.json(items);
-            } else {
-                res.json({message: "no items found"});
-            }
-        })
-        .catch(err => {
-            return res
-                .status(500)
-                .json({success: false, message: `something went wrong. ${err}`});
-        });
+        .then(items => items ? res.json(items) : res.json({message: "no items found"}))
+        .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
 }
 
 // get single item
 const getItem = (req, res) => {
     Item.findById(req.params.id)
-        .then(item => {
-            if (item) {
-                res.json(item);
-            } else {
-                res.status(404).json({message: "item not found"});
-            }
-        })
-        .catch(err => {
-            return res
-                .status(500)
-                .json({success: false, message: `something went wrong. ${err}`});
-        });
+        .then(item => item ? res.json(item) : res.status(404).json({message: "item not found"}))
+        .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
 }
 
 // create item
@@ -77,14 +57,8 @@ const createItem = (req, res) => {
         // save item
         newItem
             .save()
-            .then(() =>
-                res.json({success: true, message: "successfully created item"})
-            )
-            .catch(err => {
-                return res
-                    .status(500)
-                    .json({success: false, message: `something went wrong. ${err}`});
-            });
+            .then(() => res.json({success: true, message: `successfully created: ${newItem.name}`}))
+            .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
     }
 }
 
@@ -92,7 +66,7 @@ const createItem = (req, res) => {
 const updateItem = (req, res) => {
     const {errors, isValid} = validateUpdateItem(req.body);
 
-    // update travent validation
+    // update validation
     function validateUpdateItem(data) {
         let errors = {};
 
@@ -126,42 +100,20 @@ const updateItem = (req, res) => {
                     item.weight = req.body.weight;
                     item.size = req.body.size;
                     // edit/update
-                    item
-                        .save()
-                        .then(() =>
-                            res.json({success: true, message: "successfully updated item"})
-                        );
+                    item.save().then(() =>res.json({success: true, message: `successfully updated: ${item.name}`}));
                 } else {
                     res.status(404).json({message: "item not found"});
                 }
             })
-            .catch(err => {
-                return res
-                    .status(500)
-                    .json({success: false, message: `something went wrong. ${err}`});
-            });
+            .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
     }
 }
 
 // delete item
 const deleteItem = (req, res) => {
     Item.findById(req.params.id)
-        .then(item => {
-            if (item) {
-                item
-                    .remove()
-                    .then(() =>
-                        res.json({success: true, message: "successfully removed item"})
-                    );
-            } else {
-                res.status(404).json({message: "item not found"});
-            }
-        })
-        .catch(err => {
-            return res
-                .status(500)
-                .json({success: false, message: `something went wrong. ${err}`});
-        });
+        .then(item => item ? item.remove().then(() => res.json({success: true, message: "successfully removed item"})) : res.status(404).json({message: "item not found"}))
+        .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
 }
 
 module.exports = {
