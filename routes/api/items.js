@@ -3,27 +3,15 @@ const router = express.Router();
 const validator = require("validator");
 const isEmpty = require("../../utils/isEmpty");
 
-// MODELS
+// MODEL
 const Item = require("../../models/Item");
+
+// CONTROLLER
+const ItemController = require("../../controllers/Item.controller");
 
 // GET | api/items
 // display all the items
-router.get("/", (req, res) => {
-  Item.find()
-    .sort({ _id: -1 })
-    .then(items => {
-      if (items) {
-        res.json(items);
-      } else {
-        res.json({ message: "no items found" });
-      }
-    })
-    .catch(err => {
-      return res
-        .status(500)
-        .json({ success: false, message: `something went wrong. ${err}` });
-    });
-});
+router.get("/", ItemController.getAllItems);
 
 // GET | api/items/:id
 // get a single item
