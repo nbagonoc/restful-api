@@ -25,14 +25,10 @@ const createItem = (req, res) => {
     function validateCreateItem(data) {
         let errors = {};
 
-        data.name = !isEmpty(data.name) ? data.name : "";
-        data.weight = !isEmpty(data.weight) ? data.weight : "";
-        data.size = !isEmpty(data.size) ? data.size : "";
-
         // validate using validator
-        if (validator.isEmpty(data.name)) errors.name = "Name is required";
-        if (validator.isEmpty(data.weight)) errors.weight = "Weight is required";
-        if (validator.isEmpty(data.size)) errors.size = "Size is required";
+        if (validator.isEmpty(data.name,{ignore_whitespace:true})) errors.name = "Name is required";
+        if (validator.isEmpty(data.weight,{ignore_whitespace:true})) errors.weight = "Weight is required";
+        if (validator.isEmpty(data.size,{ignore_whitespace:true})) errors.size = "Size is required";
         return {
             errors,
             isValid: isEmpty(errors)
@@ -62,15 +58,10 @@ const updateItem = (req, res) => {
     function validateUpdateItem(data) {
         let errors = {};
 
-        // check if data sent was ""
-        data.name = !isEmpty(data.name) ? data.name : "";
-        data.weight = !isEmpty(data.weight) ? data.weight : "";
-        data.size = !isEmpty(data.size) ? data.size : "";
-
         // validate using validator
-        if (validator.isEmpty(data.name)) errors.name = "Name is required";
-        if (validator.isEmpty(data.weight)) errors.weight = "Weight is required";
-        if (validator.isEmpty(data.size)) errors.size = "Size is required";
+        if (validator.isEmpty(data.name,{ignore_whitespace:true})) errors.name = "Name is required";
+        if (validator.isEmpty(data.weight,{ignore_whitespace:true})) errors.weight = "Weight is required";
+        if (validator.isEmpty(data.size,{ignore_whitespace:true})) errors.size = "Size is required";
         
         return {
             errors,
