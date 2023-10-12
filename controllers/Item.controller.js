@@ -6,69 +6,42 @@ const isEmpty = require("../utils/isEmpty");
 const getAllItems = (req, res) => {
     Item.find()
         .sort({_id: -1})
-        .then(items => items ? res.json(items) : res.json({success: false, message: "no items found"}))
-        .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
+        .then(items => items ? res.json(items) : res.status(400).json({message: "no items found"}))
+        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
 }
 
 // get single item
 const getItem = (req, res) => {
     Item.findById(req.params.id)
-        .then(item => item ? res.json(item) : res.json({success: false, message: "item not found"}))
-        .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
+        // .select("_id name size")
+        .then(item => item ? res.json(item) : res.status(400).json({message: "item not found"}))
+        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
 }
 
 // create item
 const createItem = (req, res) => {
-    const {errors, isValid} = validateCreateItem(req.body);
+    const validation = validateItem(req.body);
 
-    // check if data sent was ""
-    function validateCreateItem(data) {
-        let errors = {};
+    if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
 
-        // validate using validator
-        if (validator.isEmpty(data.name,{ignore_whitespace:true})) errors.name = "Name is required";
-        if (validator.isEmpty(data.weight,{ignore_whitespace:true})) errors.weight = "Weight is required";
-        if (validator.isEmpty(data.size,{ignore_whitespace:true})) errors.size = "Size is required";
-        return {
-            errors,
-            isValid: isEmpty(errors)
-        };
-    }
-    if (!isValid) return res.json({success:false,...errors});
-    else {
-        // no erros
-        const newItem = new Item({
-            name: req.body.name,
-            weight: req.body.weight,
-            size: req.body.size
-        });
-        // save item
-        newItem
-            .save()
-            .then(() => res.json({success: true, message: `successfully created: ${newItem.name}`}))
-            .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
-    }
+    const newItem = new Item({
+        name: req.body.name,
+        weight: req.body.weight,
+        size: req.body.size
+    });
+    
+    newItem
+        .save()
+        .then(() => res.json({message: `successfully created: ${newItem.name}`}))
+        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
 }
 
 // update item
 const updateItem = (req, res) => {
-    const {errors, isValid} = validateUpdateItem(req.body);
+    const validation = validateItem(req.body);
 
-    // update validation
-    function validateUpdateItem(data) {
-        let errors = {};
+    if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
 
-        // validate using validator
-        if (validator.isEmpty(data.name,{ignore_whitespace:true})) errors.name = "Name is required";
-        if (validator.isEmpty(data.weight,{ignore_whitespace:true})) errors.weight = "Weight is required";
-        if (validator.isEmpty(data.size,{ignore_whitespace:true})) errors.size = "Size is required";
-        
-        return {
-            errors,
-            isValid: isEmpty(errors)
-        };
-    }
-    if (!isValid) return res.json({success:false,...errors});
     else {
         Item.findById(req.params.id)
             .then(item => {
@@ -76,19 +49,36 @@ const updateItem = (req, res) => {
                     item.name = req.body.name;
                     item.weight = req.body.weight;
                     item.size = req.body.size;
-                    // edit/update
-                    item.save().then(() =>res.json({success: true, message: `successfully updated: ${item.name}`}));
-                } else res.json({success: false, message: "item not found"});
+
+                    item.save().then(() =>res.json({message: `successfully updated: ${item.name}`}));
+                } else res.status(400).json({message: "item not found"});
             })
-            .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
+            .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
     }
+}
+
+// validate item
+function validateItem(data) {
+    let errors = {};
+
+    if (validator.isEmpty(data.name, { ignore_whitespace: true }))
+        errors.name = "Name is required";
+    if (validator.isEmpty(data.weight, { ignore_whitespace: true }))
+        errors.weight = "Weight is required";
+    if (validator.isEmpty(data.size, { ignore_whitespace: true }))
+        errors.size = "Size is required";
+    
+    return {
+        errors,
+        isValid: isEmpty(errors)
+    };
 }
 
 // delete item
 const deleteItem = (req, res) => {
     Item.findById(req.params.id)
-        .then(item => item ? item.remove().then(() => res.json({success: true, message: "successfully removed item"})) : res.json({success: false, message: "item not found"}))
-        .catch(err => res.status(500).json({success: false, message: `something went wrong. ${err}`}));
+        .then(item => item ? item.remove().then(() => res.json({message: "successfully removed item"})) : res.status(400).json({message: "item not found"}))
+        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
 }
 
 module.exports = {
