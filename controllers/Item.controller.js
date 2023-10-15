@@ -57,6 +57,13 @@ const updateItem = (req, res) => {
     }
 }
 
+// delete item
+const deleteItem = (req, res) => {
+    Item.findById(req.params.id)
+        .then(item => item ? item.remove().then(() => res.json({success: {message: "successfully removed item"}})) : res.status(400).json({errors: {message: "item not found"}}))
+        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
+}
+
 // validate item
 function validateItem(data) {
     let errors = {};
@@ -72,13 +79,6 @@ function validateItem(data) {
         errors,
         isValid: isEmpty(errors)
     };
-}
-
-// delete item
-const deleteItem = (req, res) => {
-    Item.findById(req.params.id)
-        .then(item => item ? item.remove().then(() => res.json({success: {message: "successfully removed item"}})) : res.status(400).json({errors: {message: "item not found"}}))
-        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
 module.exports = {
