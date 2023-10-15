@@ -6,16 +6,16 @@ const isEmpty = require("../utils/isEmpty");
 const getAllItems = (req, res) => {
     Item.find()
         .sort({_id: -1})
-        .then(items => items ? res.json(items) : res.status(400).json({message: "no items found"}))
-        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
+        .then(items => items ? res.json(items) : res.status(400).json({errors: {message: "no items found"}}))
+        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
 // get single item
 const getItem = (req, res) => {
     Item.findById(req.params.id)
         // .select("_id name size")
-        .then(item => item ? res.json(item) : res.status(400).json({message: "item not found"}))
-        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
+        .then(item => item ? res.json(item) : res.status(400).json({errors: {message: "item not found"}}))
+        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
 // create item
@@ -32,8 +32,8 @@ const createItem = (req, res) => {
     
     newItem
         .save()
-        .then(() => res.json({message: `successfully created: ${newItem.name}`}))
-        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
+        .then(() => res.json( {message: `successfully created: ${newItem.name}`}))
+        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
 // update item
@@ -50,10 +50,10 @@ const updateItem = (req, res) => {
                     item.weight = req.body.weight;
                     item.size = req.body.size;
 
-                    item.save().then(() =>res.json({message: `successfully updated: ${item.name}`}));
-                } else res.status(400).json({message: "item not found"});
+                    item.save().then(() =>res.json({success:  {message: `successfully updated: ${item.name}`}}));
+                } else res.status(400).json({errors: {message: "item not found"}});
             })
-            .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
+            .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
     }
 }
 
@@ -77,8 +77,8 @@ function validateItem(data) {
 // delete item
 const deleteItem = (req, res) => {
     Item.findById(req.params.id)
-        .then(item => item ? item.remove().then(() => res.json({message: "successfully removed item"})) : res.status(400).json({message: "item not found"}))
-        .catch(err => res.status(500).json({message: `something went wrong. ${err}`}));
+        .then(item => item ? item.remove().then(() => res.json( {message: "successfully removed item"})) : res.status(400).json({errors: {message: "item not found"}}))
+        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
 module.exports = {
