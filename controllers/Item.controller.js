@@ -3,11 +3,13 @@ const validator = require("validator");
 const isEmpty = require("../utils/isEmpty");
 
 // get all the items
-const getAllItems = (req, res) => {
-    Item.find()
-        .sort({_id: -1})
-        .then(items => items ? res.json(items) : res.status(400).json({errors: {message: "no items found"}}))
-        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
+const getAllItems = async (req, res) => {
+    try {
+        const items = await Item.find().sort({ _id: -1 });
+        items.length > 0 ? res.json(items) : res.status(400).json({errors: {message: "no items found"}});
+    } catch (err) {
+        res.status(500).json({ errors: { message: `Something went wrong: ${err}` } });
+    }
 }
 
 // get single item
