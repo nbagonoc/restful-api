@@ -32,7 +32,7 @@ const createItem = (req, res) => {
     
     newItem
         .save()
-        .then(() => res.json( {message: `successfully created: ${newItem.name}`}))
+        .then(() => res.json( {success: {message: `successfully created: ${newItem.name}`}}))
         .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
@@ -77,7 +77,7 @@ function validateItem(data) {
 // delete item
 const deleteItem = (req, res) => {
     Item.findById(req.params.id)
-        .then(item => item ? item.remove().then(() => res.json( {message: "successfully removed item"})) : res.status(400).json({errors: {message: "item not found"}}))
+        .then(item => item ? item.remove().then(() => res.json({success: {message: "successfully removed item"}})) : res.status(400).json({errors: {message: "item not found"}}))
         .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
 }
 
