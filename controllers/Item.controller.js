@@ -62,11 +62,11 @@ function validateItem(data) {
     let errors = {};
 
     if (validator.isEmpty(data.name, { ignore_whitespace: true }))
-        errors.name = "Name is required";
+        errors.name = { message: "Name is required" };
     if (validator.isEmpty(data.weight, { ignore_whitespace: true }))
-        errors.weight = "Weight is required";
+        errors.weight = { message: "Weight is required" };
     if (validator.isEmpty(data.size, { ignore_whitespace: true }))
-        errors.size = "Size is required";
+        errors.size = { message: "Size is required" };
     
     return {
         errors,
