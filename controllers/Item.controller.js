@@ -13,57 +13,70 @@ const getAllItems = async (req, res) => {
 }
 
 // get single item
-const getItem = (req, res) => {
-    Item.findById(req.params.id)
-        // .select("_id name size")
-        .then(item => item ? res.json(item) : res.status(400).json({errors: {message: "item not found"}}))
-        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
+const getItem = async (req, res) => {
+    try {
+        const item = await Item.findById(req.params.id).select("_id name size");
+        item ? res.json(item) : res.status(400).json({errors: {message: "item not found"}});
+    } catch (err) {
+        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}})
+    }
 }
 
 // create item
-const createItem = (req, res) => {
-    const validation = validateItem(req.body);
+const createItem = async (req, res) => {
+    try {
+        const validation = await validateItem(req.body);
+        if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
 
-    if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
+        const newItem = new Item({
+            name: req.body.name,
+            weight: req.body.weight,
+            size: req.body.size
+        });
+        await newItem.save();
+        res.json({success: {message: `successfully created: ${newItem.name}`}});
+    } catch (err) {
+        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
+    }
 
-    const newItem = new Item({
-        name: req.body.name,
-        weight: req.body.weight,
-        size: req.body.size
-    });
-    
-    newItem
-        .save()
-        .then(() => res.json( {success: {message: `successfully created: ${newItem.name}`}}))
-        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
+        
 }
 
 // update item
-const updateItem = (req, res) => {
-    const validation = validateItem(req.body);
+const updateItem = async (req, res) => {
+    try {
+        const validation = await validateItem(req.body);
+        if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
 
-    if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
+        const item = await Item.findById(req.params.id);
+        if (item) {
+            item.name = req.body.name;
+            item.weight = req.body.weight;
+            item.size = req.body.size;
 
-    else {
-        Item.findById(req.params.id)
-            .then(item => {
-                if (item) {
-                    item.name = req.body.name;
-                    item.weight = req.body.weight;
-                    item.size = req.body.size;
-
-                    item.save().then(() =>res.json({success:  {message: `successfully updated: ${item.name}`}}));
-                } else res.status(400).json({errors: {message: "item not found"}});
-            })
-            .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
+            await item.save();
+            res.json({success:  {message: `successfully updated: ${item.name}`}});
+        } else {
+            res.status(400).json({errors: {message: "item not found"}});
+        }
+    } catch (err) {
+        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
     }
 }
 
 // delete item
-const deleteItem = (req, res) => {
-    Item.findById(req.params.id)
-        .then(item => item ? item.remove().then(() => res.json({success: {message: "successfully removed item"}})) : res.status(400).json({errors: {message: "item not found"}}))
-        .catch(err => res.status(500).json({errors:  {message: `Something went wrong: ${err}`}}));
+const deleteItem = async (req, res) => {
+    try {
+        const item = await Item.findById(req.params.id);
+        if (item) {
+            await item.remove();
+            res.json({ success: { message: "successfully removed item" } });
+        } else {
+            res.status(400).json({ errors: { message: "item not found" } });
+        }
+    } catch (error) {
+        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
+    }
 }
 
 // validate item
