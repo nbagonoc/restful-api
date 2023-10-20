@@ -15,7 +15,7 @@ const getAllItems = async (req, res) => {
 // get single item
 const getItem = async (req, res) => {
     try {
-        const item = await Item.findById(req.params.id).select("_id name size");
+        const item = await Item.findById(req.params.id).select("_id name weight size");
         item ? res.json(item) : res.status(400).json({errors: {message: "item not found"}});
     } catch (err) {
         res.status(500).json({errors:  {message: `Something went wrong: ${err}`}})
@@ -34,12 +34,10 @@ const createItem = async (req, res) => {
             size: req.body.size
         });
         await newItem.save();
-        res.json({success: {message: `successfully created: ${newItem.name}`}});
+        res.status(200).json({success: {message: `successfully created: ${newItem.name}`}});
     } catch (err) {
         res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
-    }
-
-        
+    }    
 }
 
 // update item
