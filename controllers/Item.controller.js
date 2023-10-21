@@ -126,4 +126,5 @@ module.exports = {
     createItem,
     updateItem,
     deleteItem,
+    validateItem,
 };
