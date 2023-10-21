@@ -1,6 +1,6 @@
 const Item = require("../models/Item");
 const validator = require("validator");
-const isEmpty = require("../utils/isEmpty");
+// const isEmpty = require("../utils/isEmpty");
 
 // get all the items
 const getAllItems = async (req, res) => {
@@ -90,7 +90,7 @@ function validateItem(data) {
     
     return {
         errors,
-        isValid: isEmpty(errors)
+        isValid: Object.keys(errors).length === 0
     };
 }
 
