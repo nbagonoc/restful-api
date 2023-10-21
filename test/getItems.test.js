@@ -2,13 +2,18 @@ const Item = require("../models/Item");
 const { getAllItems } = require("../controllers/Item.controller");
 
 describe("getAllItems", () => {
+    const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+    };
+
     afterEach(() => {
-        jest.restoreAllMocks();
+        jest.clearAllMocks();
     });
 
     it("should return all items sorted by _id in descending order", async () => {
         //Arrange
-        const items = [
+        const mockItems = [
             {
                 _id: "6532105053bd9f4114a81755",
                 name: "sample name",
@@ -27,14 +32,14 @@ describe("getAllItems", () => {
             },
         ];
         jest.spyOn(Item, "find").mockReturnValue({
-            sort: jest.fn().mockReturnValue(items),
+            sort: jest.fn().mockReturnValue(mockItems),
         });
         const req = {};
-        const res = { json: jest.fn() };
         //Act
         await getAllItems(req, res);
         //Assert
-        expect(res.json).toHaveBeenCalledWith(items);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(mockItems);
     });
 
     it("should return a 400 error if no items are found", async () => {
@@ -43,15 +48,11 @@ describe("getAllItems", () => {
             sort: jest.fn().mockReturnValue([]),
         });
         const req = {};
-        const res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        };
         //Act
         await getAllItems(req, res);
         //Assert
         expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.status().json).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith({
             errors: {
                 message: "no items found"
             },
@@ -64,18 +65,15 @@ describe("getAllItems", () => {
             throw new Error("Test Error");
         });
         const req = {};
-        const res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        };
         //Act
         await getAllItems(req, res);
         //Assert
         expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.status().json).toHaveBeenCalledWith({
+        expect(res.json).toHaveBeenCalledWith({
             errors: {
                 message: "Something went wrong: Error: Test Error"
             },
         });
     });
+
 });
