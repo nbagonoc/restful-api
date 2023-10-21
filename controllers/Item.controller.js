@@ -6,45 +6,61 @@ const validator = require("validator");
 const getAllItems = async (req, res) => {
     try {
         const items = await Item.find().sort({ _id: -1 });
-        items.length > 0 ? res.json(items) : res.status(400).json({errors: {message: "no items found"}});
+        items.length > 0
+            ? res.json(items)
+            : res.status(400).json({ errors: { message: "no items found" } });
     } catch (err) {
-        res.status(500).json({ errors: { message: `Something went wrong: ${err}` } });
+        res.status(500).json({
+            errors: { message: `Something went wrong: ${err}` },
+        });
     }
-}
+};
 
 // get single item
 const getItem = async (req, res) => {
     try {
-        const item = await Item.findById(req.params.id).select("_id name weight size");
-        item ? res.json(item) : res.status(400).json({errors: {message: "item not found"}});
+        const item = await Item.findById(req.params.id).select(
+            "_id name weight size"
+        );
+        item
+            ? res.json(item)
+            : res.status(400).json({ errors: { message: "item not found" } });
     } catch (err) {
-        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}})
+        res.status(500).json({
+            errors: { message: `Something went wrong: ${err}` },
+        });
     }
-}
+};
 
 // create item
 const createItem = async (req, res) => {
     try {
         const validation = await validateItem(req.body);
-        if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
+        if (!validation.isValid)
+            return res.status(400).json({ errors: validation.errors });
 
         const newItem = new Item({
             name: req.body.name,
             weight: req.body.weight,
-            size: req.body.size
+            size: req.body.size,
         });
         await newItem.save();
-        res.status(200).json({success: {message: `successfully created: ${newItem.name}`}});
+        res.status(200).json({
+            success: { message: `successfully created: ${newItem.name}` },
+        });
     } catch (err) {
-        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
-    }    
-}
+        res.status(500).json({
+            errors: { message: `Something went wrong: ${err}` },
+        });
+    }
+};
 
 // update item
 const updateItem = async (req, res) => {
     try {
         const validation = await validateItem(req.body);
-        if (!validation.isValid) return res.status(400).json({ errors: validation.errors });
+        if (!validation.isValid)
+            return res.status(400).json({ errors: validation.errors });
 
         const item = await Item.findById(req.params.id);
         if (item) {
@@ -53,14 +69,18 @@ const updateItem = async (req, res) => {
             item.size = req.body.size;
 
             await item.save();
-            res.status(200).json({success:  {message: `successfully updated: ${item.name}`}});
+            res.status(200).json({
+                success: { message: `successfully updated: ${item.name}` },
+            });
         } else {
-            res.status(400).json({errors: {message: "item not found"}});
+            res.status(400).json({ errors: { message: "item not found" } });
         }
     } catch (err) {
-        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
+        res.status(500).json({
+            errors: { message: `Something went wrong: ${err}` },
+        });
     }
-}
+};
 
 // delete item
 const deleteItem = async (req, res) => {
@@ -68,14 +88,18 @@ const deleteItem = async (req, res) => {
         const item = await Item.findById(req.params.id);
         if (item) {
             await item.remove();
-            res.json({ success: { message: "successfully removed item" } });
+            res.status(200).json({
+                success: { message: "successfully removed item" },
+            });
         } else {
             res.status(400).json({ errors: { message: "item not found" } });
         }
-    } catch (error) {
-        res.status(500).json({errors:  {message: `Something went wrong: ${err}`}});
+    } catch (err) {
+        res.status(500).json({
+            errors: { message: `Something went wrong: ${err}` },
+        });
     }
-}
+};
 
 // validate item
 function validateItem(data) {
@@ -87,12 +111,12 @@ function validateItem(data) {
         errors.weight = { message: "Weight is required" };
     if (validator.isEmpty(data.size, { ignore_whitespace: true }))
         errors.size = { message: "Size is required" };
-    
+
     const isValid = Object.keys(errors).length === 0;
-    
+
     return {
         errors,
-        isValid
+        isValid,
     };
 }
 
@@ -101,5 +125,5 @@ module.exports = {
     getItem,
     createItem,
     updateItem,
-    deleteItem
-}
+    deleteItem,
+};
