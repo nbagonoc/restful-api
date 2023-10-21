@@ -1,6 +1,2 @@
 /node_modules
-/client/node_modules
-/.vscode
-/test/dist
-/controllers/dist
 package-lock.json
