@@ -13,7 +13,7 @@ describe("Item Controller", () => {
             const mockItem = {
                 _id: "6533623125aced7f2d2d827c",
                 name: "Test Item",
-                weight: 10,
+                weight: "heavy",
                 size: "large",
             };
             Item.findById = jest.fn().mockResolvedValue(mockItem);

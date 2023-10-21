@@ -73,7 +73,9 @@ describe("getAllItems", () => {
         //Assert
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.status().json).toHaveBeenCalledWith({
-            errors: { message: "Something went wrong: Error: Test Error" },
+            errors: {
+                message: "Something went wrong: Error: Test Error"
+            },
         });
     });
 });

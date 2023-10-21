@@ -29,7 +29,9 @@ describe("createItem", () => {
         //Assert
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
-            success: { message: "successfully created: Test Item" },
+            success: {
+                message: "successfully created: Test Item"
+            },
         });
     });
 
@@ -39,7 +41,9 @@ describe("createItem", () => {
             .fn()
             .mockReturnValue({
                 isValid: false,
-                errors: { name: "Name is required" },
+                errors: {
+                    name: "Name is required"
+                },
             });
         const req = {
             body: {
@@ -81,7 +85,9 @@ describe("createItem", () => {
         //Assert
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
-            errors: { message: "Something went wrong: Error: Database error" },
+            errors: {
+                message: "Something went wrong: Error: Database error"
+            },
         });
     });
 });
