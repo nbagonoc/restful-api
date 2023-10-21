@@ -88,9 +88,11 @@ function validateItem(data) {
     if (validator.isEmpty(data.size, { ignore_whitespace: true }))
         errors.size = { message: "Size is required" };
     
+    const isValid = Object.keys(errors).length === 0;
+    
     return {
         errors,
-        isValid: Object.keys(errors).length === 0
+        isValid
     };
 }
 
