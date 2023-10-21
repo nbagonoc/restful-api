@@ -53,7 +53,7 @@ const updateItem = async (req, res) => {
             item.size = req.body.size;
 
             await item.save();
-            res.json({success:  {message: `successfully updated: ${item.name}`}});
+            res.status(200).json({success:  {message: `successfully updated: ${item.name}`}});
         } else {
             res.status(400).json({errors: {message: "item not found"}});
         }
