@@ -1,17 +1,22 @@
 const Item = require("../models/Item");
 const validator = require("validator");
-// const isEmpty = require("../utils/isEmpty");
 
 // get all the items
 const getAllItems = async (req, res) => {
     try {
         const items = await Item.find().sort({ _id: -1 });
         items.length > 0
-            ? res.json(items)
-            : res.status(400).json({ errors: { message: "no items found" } });
+            ? res.status(200).json(items)
+            : res.status(400).json({
+                errors: {
+                    message: "no items found"
+                }
+            });
     } catch (err) {
         res.status(500).json({
-            errors: { message: `Something went wrong: ${err}` },
+            errors: {
+                message: `Something went wrong: ${err}`
+            },
         });
     }
 };
@@ -24,10 +29,16 @@ const getItem = async (req, res) => {
         );
         item
             ? res.json(item)
-            : res.status(400).json({ errors: { message: "item not found" } });
+            : res.status(400).json({
+                errors: {
+                    message: "item not found"
+                }
+            });
     } catch (err) {
         res.status(500).json({
-            errors: { message: `Something went wrong: ${err}` },
+            errors: {
+                message: `Something went wrong: ${err}`
+            },
         });
     }
 };
@@ -46,11 +57,15 @@ const createItem = async (req, res) => {
         });
         await newItem.save();
         res.status(200).json({
-            success: { message: `successfully created: ${newItem.name}` },
+            success: {
+                message: `successfully created: ${newItem.name}`
+            },
         });
     } catch (err) {
         res.status(500).json({
-            errors: { message: `Something went wrong: ${err}` },
+            errors: {
+                message: `Something went wrong: ${err}`
+            },
         });
     }
 };
@@ -70,14 +85,22 @@ const updateItem = async (req, res) => {
 
             await item.save();
             res.status(200).json({
-                success: { message: `successfully updated: ${item.name}` },
+                success: {
+                    message: `successfully updated: ${item.name}`
+                },
             });
         } else {
-            res.status(400).json({ errors: { message: "item not found" } });
+            res.status(400).json({
+                errors: {
+                    message: "item not found"
+                }
+            });
         }
     } catch (err) {
         res.status(500).json({
-            errors: { message: `Something went wrong: ${err}` },
+            errors: {
+                message: `Something went wrong: ${err}`
+            },
         });
     }
 };
@@ -89,14 +112,22 @@ const deleteItem = async (req, res) => {
         if (item) {
             await item.remove();
             res.status(200).json({
-                success: { message: "successfully removed item" },
+                success: {
+                    message: "successfully removed item"
+                },
             });
         } else {
-            res.status(400).json({ errors: { message: "item not found" } });
+            res.status(400).json({
+                errors: {
+                    message: "item not found"
+                }
+            });
         }
     } catch (err) {
         res.status(500).json({
-            errors: { message: `Something went wrong: ${err}` },
+            errors: {
+                message: `Something went wrong: ${err}`
+            },
         });
     }
 };
