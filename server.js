@@ -4,22 +4,40 @@ const app = express();
 
 // DB CONNECT
 const mongoose = require("mongoose");
-const db = require("./config/dbSecretKeys").mongoURI;
-mongoose.connect(db,{useNewUrlParser: true, useUnifiedTopology: true})
-        .then(() => console.log("we are connected to the DB"))
-        .catch(err => console.log(err));
+const { mongoURI } = require("./config/dbSecretKeys");
+const connectToDatabase = async () => {
+    try {
+        await mongoose.connect(mongoURI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Connected to the DB");
+    } catch (err) {
+        console.log("Error connecting to the DB:", err);
+    }
+};
+connectToDatabase();
 
 // MIDDLEWARES
 const cors = require("cors");
 app.use(cors());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // USE ROUTES
 const items = require("./routes/api/items");
 app.use("/api/items", items);
 
-// SET PORT
+// SET PORT, and START SERVER
 const port = process.env.PORT || 3100;
-const server = app.listen(port, () => console.log(`we are live at ${port}`));
+const server = async () => {
+    try {
+        await app.listen(port);
+        console.log(`We are live at: ${port}`);
+    } catch (err) {
+        console.log(`Server startup failed: ${err}`);
+    }
+};
+server();
+
 module.exports = server;
