@@ -21,4 +21,5 @@ app.use("/api/items", items);
 
 // SET PORT
 const port = process.env.PORT || 3100;
-app.listen(port, () => console.log(`we are live at ${port}`));
+const server = app.listen(port, () => console.log(`we are live at ${port}`));
+module.exports = server;
