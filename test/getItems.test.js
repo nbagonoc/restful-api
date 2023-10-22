@@ -54,7 +54,7 @@ describe("getAllItems", () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             errors: {
-                message: "no items found"
+                message: "no items found",
             },
         });
     });
@@ -71,9 +71,8 @@ describe("getAllItems", () => {
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
             errors: {
-                message: "Something went wrong: Error: Test Error"
+                message: "Something went wrong: Error: Test Error",
             },
         });
     });
-
 });
