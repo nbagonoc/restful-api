@@ -28,7 +28,7 @@ const getItem = async (req, res) => {
             "_id name weight size"
         );
         item
-            ? res.json(item)
+            ? res.status(200).json(item)
             : res.status(400).json({
                 errors: {
                     message: "item not found"
