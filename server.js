@@ -21,7 +21,7 @@ connectToDatabase();
 // MIDDLEWARES
 const cors = require("cors");
 app.use(cors());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // USE ROUTES
@@ -40,4 +40,7 @@ const server = async () => {
 };
 server();
 
-module.exports = server;
+module.exports = {
+    app,
+    server,
+};
