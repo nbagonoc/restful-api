@@ -4,10 +4,10 @@ const app = express();
 
 // DB CONNECT
 const mongoose = require("mongoose");
-const { mongoURI } = require("./config/dbSecretKeys");
-const connectToDatabase = async () => {
+const { mongoURI } = require("./configs/dbSecretKeys");
+const connectToDatabase = () => {
     try {
-        await mongoose.connect(mongoURI, {
+        mongoose.connect(mongoURI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -30,9 +30,9 @@ app.use("/api/items", items);
 
 // SET PORT, and START SERVER
 const port = process.env.PORT || 3100;
-const server = async () => {
+const server = () => {
     try {
-        await app.listen(port);
+        app.listen(port);
         console.log(`We are live at: ${port}`);
     } catch (err) {
         console.log(`Server startup failed: ${err}`);
