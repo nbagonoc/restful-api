@@ -133,7 +133,7 @@ const deleteItem = async (req, res) => {
 };
 
 // validate item
-function validateItem(data) {
+const validateItem = (data) => {
     let errors = {};
 
     if (validator.isEmpty(data.name, { ignore_whitespace: true }))
