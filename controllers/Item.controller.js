@@ -73,15 +73,13 @@ const createItem = async (req, res) => {
 // update item
 const updateItem = async (req, res) => {
     try {
-        const validation = await validateItem(req.body);
+        const validation = validateItem(req.body);
         if (!validation.isValid)
             return res.status(400).json({ errors: validation.errors });
 
         const item = await Item.findById(req.params.id);
         if (item) {
-            item.name = req.body.name;
-            item.weight = req.body.weight;
-            item.size = req.body.size;
+            item.set({ ...req.body })
 
             await item.save();
             res.status(200).json({
