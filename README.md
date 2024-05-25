@@ -19,5 +19,9 @@ npm install
 - Serve by running:
 ```
 npm run dev
+```
+
+- Execute test with Jest:
+```
 npm run test
 ```
